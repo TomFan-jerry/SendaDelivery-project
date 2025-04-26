@@ -26,6 +26,22 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!--senda-server-->
+        <!-- senda-pojo-->
+        <senda-pojo.version>1.0-SNAPSHOT</senda-pojo.version>
+        <!--senda-common-->
+        <senda-common.version>1.0-SNAPSHOT</senda-common.version>
+        <!--mybatis-->
+        <mybatis-spring-boot-starter.version>3.0.4</mybatis-spring-boot-starter.version>
+        <mybatis-spring-boot-starter-test.version>3.0.4</mybatis-spring-boot-starter-test.version>
+        <!--senda-common-->
+        <!--jwt-->
+        <jjwt-api.version>0.11.2</jjwt-api.version>
+        <jjwt-impl.version>0.11.2</jjwt-impl.version>
+        <jjwt-jackson.version>0.11.2</jjwt-jackson.version>
+        <!--R2-->
+        <s3.version>2.20.1</s3.version>
     </properties>
 
     <dependencies>
@@ -46,5 +62,60 @@
             <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--senda-server-->
+            <!-- senda-pojo-->
+            <dependency>
+                <groupId>com.senda</groupId>
+                <artifactId>senda-pojo</artifactId>
+                <version>${senda-pojo.version}</version>
+            </dependency>
+            <!--senda-common-->
+            <dependency>
+                <groupId>com.senda</groupId>
+                <artifactId>senda-common</artifactId>
+                <version>${senda-common.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <!--mybatis-->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter-test</artifactId>
+                <version>${mybatis-spring-boot-starter-test.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!--senda-common-->
+            <!--jwt-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt-impl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt-jackson.version}</version>
+            </dependency>
+            <!--R2-->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>s3</artifactId>
+                <version>${s3.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

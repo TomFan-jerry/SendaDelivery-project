@@ -22,14 +22,12 @@
         <dependency>
             <groupId>com.senda</groupId>
             <artifactId>senda-pojo</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <!--senda-common-->
         <dependency>
             <groupId>com.senda</groupId>
             <artifactId>senda-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -37,12 +35,10 @@
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>3.0.4</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter-test</artifactId>
-            <version>3.0.4</version>
             <scope>test</scope>
         </dependency>
 
@@ -53,6 +49,7 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!--加密（BCrypt）-->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
