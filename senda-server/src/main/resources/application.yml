@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: example
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/senda_delivery
+    username: root
+    password: WANGfan040823
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 300MB
+
+#spring事务管理日志
+logging:
+  level:
+    org.springframework.jdbc.support.JdbcTransactionManager: debug
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+r2:
+  endpoint: "https://322c9f29618be2ca9a55df8b95862c5e.r2.cloudflarestorage.com"
+  access-key: "f1b680aff9fe55a2abcda4dc04f34305"
+  secret-key: "1b217fde1a0d4af695f3a987af7e5aaa0c57787a4b90b558546f19e336807a3c"
+  bucket-name: "javaweb-example"
+  public-endpoint: "https://pub-e7b11959eb5f42b59d5abbedf20e7ea8.r2.dev"
