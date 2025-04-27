@@ -32,7 +32,7 @@
         </dependency>
 
         <!--mybatis-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
         </dependency>
@@ -40,6 +40,18 @@
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>-->
+
+        <!--mybatis-plus-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <version>3.5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter-test</artifactId>
+            <version>3.5.6</version>
         </dependency>
 
         <!--mysql-->
@@ -53,6 +65,18 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
+        </dependency>
+
+        <!--spring-boot-starter-actuator（执行器）-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!--fastjson（实现 JSON 序列化）-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
         </dependency>
     </dependencies>
 

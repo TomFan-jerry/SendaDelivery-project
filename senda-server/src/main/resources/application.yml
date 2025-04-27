@@ -16,10 +16,19 @@ logging:
   level:
     org.springframework.jdbc.support.JdbcTransactionManager: debug
 
-mybatis:
+#mybatis:
+#  configuration:
+#    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+mybatis-plus:
   configuration:
-    map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true #下划线-驼峰命名转换
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #将日志输出到标准输出（控制台）
+  mapper-locations: classpath*:/mapper/**/*.xml #Mapper.xml文件地址，默认值
+  global-config:
+    db-config:
+      id-type: auto #id主键自增
 
 r2:
   endpoint: "https://322c9f29618be2ca9a55df8b95862c5e.r2.cloudflarestorage.com"

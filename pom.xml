@@ -33,8 +33,13 @@
         <!--senda-common-->
         <senda-common.version>1.0-SNAPSHOT</senda-common.version>
         <!--mybatis-->
-        <mybatis-spring-boot-starter.version>3.0.4</mybatis-spring-boot-starter.version>
-        <mybatis-spring-boot-starter-test.version>3.0.4</mybatis-spring-boot-starter-test.version>
+        <!--<mybatis-spring-boot-starter.version>3.0.4</mybatis-spring-boot-starter.version>
+        <mybatis-spring-boot-starter-test.version>3.0.4</mybatis-spring-boot-starter-test.version>-->
+        <!--mybatis-plus-->
+        <mybatis-plus-spring-boot3-starter.version>3.5.6</mybatis-plus-spring-boot3-starter.version>
+        <mybatis-plus-boot-starter-test.version>3.5.6</mybatis-plus-boot-starter-test.version>
+        <fastjson.version>1.2.76</fastjson.version>
+
         <!--senda-common-->
         <!--jwt-->
         <jjwt-api.version>0.11.2</jjwt-api.version>
@@ -80,7 +85,7 @@
                 <scope>compile</scope>
             </dependency>
             <!--mybatis-->
-            <dependency>
+            <!--<dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis-spring-boot-starter.version}</version>
@@ -90,6 +95,23 @@
                 <artifactId>mybatis-spring-boot-starter-test</artifactId>
                 <version>${mybatis-spring-boot-starter-test.version}</version>
                 <scope>test</scope>
+            </dependency>-->
+            <!--mybatis-plus-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus-spring-boot3-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter-test</artifactId>
+                <version>${mybatis-plus-boot-starter-test.version}</version>
+            </dependency>
+            <!--fastjson（实现 JSON 序列化）-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
             </dependency>
 
             <!--senda-common-->
