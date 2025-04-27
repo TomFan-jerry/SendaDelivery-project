@@ -2,6 +2,7 @@ package com.senda.controller.admin;
 
 import com.senda.dto.EmployeeDTO;
 import com.senda.dto.EmployeeLoginDTO;
+import com.senda.dto.EmployeePageQueryDTO;
 import com.senda.entity.Employee;
 import com.senda.result.PageResult;
 import com.senda.result.Result;
@@ -82,8 +83,8 @@ public class EmployeeController {
      */
     //TODO 优化数据传输
     @GetMapping("/page")
-    public Result<PageResult<Employee>> employeePage(String name, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer pageSize) {
-        PageResult<Employee> pageResult = employeeService.employeePage(name, page, pageSize);
+    public Result<PageResult<Employee>> employeePage(EmployeePageQueryDTO employeePageQueryDTO) {
+        PageResult<Employee> pageResult = employeeService.employeePage(employeePageQueryDTO);
         return Result.success(null, pageResult);
     }
 

@@ -7,6 +7,7 @@ import com.senda.constant.PasswordConstant;
 import com.senda.constant.StatusConstant;
 import com.senda.dto.EmployeeDTO;
 import com.senda.dto.EmployeeLoginDTO;
+import com.senda.dto.EmployeePageQueryDTO;
 import com.senda.entity.Employee;
 import com.senda.exceptions.AccountLockedException;
 import com.senda.exceptions.AccountNotFoundException;
@@ -96,11 +97,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     //员工分页查询
     @Override
-    public PageResult<Employee> employeePage(String name, Integer page, Integer pageSize) {
+    public PageResult<Employee> employeePage(EmployeePageQueryDTO employeePageQueryDTO) {
         //构建分页对象
-        Page<Employee> pagePram = new Page<>(page, pageSize);
+        Page<Employee> pagePram = new Page<>(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
 
         //构建查询条件
+        String name = employeePageQueryDTO.getName();
         QueryWrapper<Employee> employeeQueryWrapper = new QueryWrapper<Employee>()
                 .orderBy(false, false, "update_time");
         if (name != null && !name.trim().isEmpty()) { //若name不为null且不为空值则进行模糊查询
@@ -111,9 +113,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         Page<Employee> result = employeeMapper.selectPage(pagePram, employeeQueryWrapper);
 
         //返回值封装
-        PageResult<Employee> pageResult = new PageResult<Employee>();
-        pageResult.setTotal(result.getTotal());
-        pageResult.setRecords(result.getRecords());
+        PageResult<Employee> pageResult = new PageResult<>();
+        pageResult.setTotal(result.getTotal())
+                .setRecords(result.getRecords());
 
         return pageResult;
     }

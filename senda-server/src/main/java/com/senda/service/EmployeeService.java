@@ -2,6 +2,7 @@ package com.senda.service;
 
 import com.senda.dto.EmployeeDTO;
 import com.senda.dto.EmployeeLoginDTO;
+import com.senda.dto.EmployeePageQueryDTO;
 import com.senda.entity.Employee;
 import com.senda.result.PageResult;
 
@@ -21,7 +22,7 @@ public interface EmployeeService {
     void add(EmployeeDTO employeeDTO);
 
     //员工分页查询
-    PageResult<Employee> employeePage(String name, Integer page, Integer pageSize);
+    PageResult<Employee> employeePage(EmployeePageQueryDTO employeePageQueryDTO);
 
 
 }
