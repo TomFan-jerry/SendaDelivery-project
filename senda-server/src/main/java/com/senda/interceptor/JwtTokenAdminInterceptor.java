@@ -2,6 +2,7 @@ package com.senda.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.senda.constant.MessageConstant;
+import com.senda.context.JwtUserContext;
 import com.senda.result.Result;
 import com.senda.utils.JwtUtils;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -70,6 +71,6 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+        JwtUserContext.clear();
     }
 }

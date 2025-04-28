@@ -5,13 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
+/**
+ * EmployeeLogin DTO
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmployeeLoginDTO implements Serializable {
+public class EmployeeLoginDTO {
 
     private String username;
     private String password;

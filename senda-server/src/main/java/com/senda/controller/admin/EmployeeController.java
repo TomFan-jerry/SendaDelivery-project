@@ -57,7 +57,7 @@ public class EmployeeController {
     @PostMapping("/logout")
     public Result<String> logout() {
         log.info("员工登出");
-        return Result.success();
+        return Result.success("已退出");
     }
 
     /**
@@ -66,10 +66,10 @@ public class EmployeeController {
      * @return
      */
     @PostMapping
-    public Result<String> add(@RequestBody EmployeeDTO employeeDTO) {
+    public Result<EmployeeDTO> add(@RequestBody EmployeeDTO employeeDTO) {
         log.info("新增员工:{}", employeeDTO);
         employeeService.add(employeeDTO);
-        return Result.success();
+        return Result.success(employeeDTO);
     }
 
     /**
@@ -120,5 +120,17 @@ public class EmployeeController {
         log.info("修改员工信息:{}", employeeDTO);
         employeeService.update(employeeDTO);
         return Result.success(employeeDTO.getId().toString());
+    }
+
+    /**
+     * 修改密码
+     * @param employeeEditPasswordDTO
+     * @return
+     */
+    @PutMapping("/editPassword")
+    public Result<String> editPassword(@RequestBody EmployeeEditPasswordDTO employeeEditPasswordDTO) {
+        log.info("修改密码:{}", employeeEditPasswordDTO);
+        employeeService.editPassword(employeeEditPasswordDTO);
+        return Result.success(employeeEditPasswordDTO.getNewPassword());
     }
 }

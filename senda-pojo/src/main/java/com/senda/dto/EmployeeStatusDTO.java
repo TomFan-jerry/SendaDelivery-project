@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 /**
- * Employee DTO
+ * EmployeeStatus DTO
  */
 @Data
 @NoArgsConstructor

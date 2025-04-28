@@ -1,6 +1,7 @@
 package com.senda.utils;
 
 import com.senda.constant.JwtConstant;
+import com.senda.context.JwtUserContext;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
@@ -32,18 +33,26 @@ public class JwtUtils {
     }
 
     /**
-     * 解析 JWT 令牌
+     * 解析 JWT 令牌并设置当前用户ID
      * @param token JWT 令牌
      * @return JWT 负载部分的内容
      * @throws JwtException 如果解析失败或令牌过期
      */
     public static Claims parseToken(String token) throws JwtException {
         Key key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
-        return Jwts.parserBuilder()
+
+        // 解析 JWT 令牌并获取用户 ID
+        Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+
+        // 从 JWT 负载中提取当前用户ID并设置
+        Long userId = claims.get("id", Long.class); // 假设 JWT 负载中有 "id" 字段
+        JwtUserContext.setCurrentUserId(userId); // 设置当前用户ID
+
+        return claims;
     }
 
     /**
