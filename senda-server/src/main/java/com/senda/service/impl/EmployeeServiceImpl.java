@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.senda.constant.MessageConstant;
 import com.senda.constant.PasswordConstant;
 import com.senda.constant.StatusConstant;
-import com.senda.dto.EmployeeDTO;
-import com.senda.dto.EmployeeLoginDTO;
-import com.senda.dto.EmployeePageQueryDTO;
-import com.senda.dto.EmployeeStatusDTO;
+import com.senda.dto.*;
 import com.senda.entity.Employee;
 import com.senda.exceptions.AccountLockedException;
 import com.senda.exceptions.AccountNotFoundException;
@@ -29,6 +26,9 @@ import java.util.Objects;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
+
+    @Autowired
+    private Employee employee;
 
     @Autowired
     private HttpServletRequest httpServletRequest;
@@ -76,8 +76,6 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public void add(EmployeeDTO employeeDTO) {
-        Employee employee = new Employee();
-
         //对象属性拷贝
         BeanUtils.copyProperties(employeeDTO, employee);
 
@@ -132,10 +130,41 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public void setStatus(EmployeeStatusDTO employeeStatusDTO) {
-        Employee employee = new Employee();
-
         //对象属性拷贝
         BeanUtils.copyProperties(employeeStatusDTO, employee);
+
+        //获取操作人id，即当前登陆的员工的id（获取请求头中的jwt令牌并解析）
+        String jwt = httpServletRequest.getHeader("token");
+        Claims claims = JwtUtils.parseToken(jwt);
+
+        //完善员工信息
+        employee.setUpdateTime(LocalDateTime.now()) //修改时间
+                .setUpdateUser(Long.valueOf(claims.get("id").toString())); //修改人
+
+        //更新数据
+        employeeMapper.updateById(employee);
+    }
+
+    /**
+     * 根据id查询员工
+     * @param id
+     * @return
+     */
+    @Override
+    public Employee selectById(Long id) {
+        //执行查询
+        Employee result = employeeMapper.selectById(id);
+        return result;
+    }
+
+    /**
+     * 修改员工信息
+     * @param employeeDTO
+     */
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        //对象属性拷贝
+        BeanUtils.copyProperties(employeeDTO, employee);
 
         //获取操作人id，即当前登陆的员工的id（获取请求头中的jwt令牌并解析）
         String jwt = httpServletRequest.getHeader("token");

@@ -1,9 +1,6 @@
 package com.senda.controller.admin;
 
-import com.senda.dto.EmployeeDTO;
-import com.senda.dto.EmployeeLoginDTO;
-import com.senda.dto.EmployeePageQueryDTO;
-import com.senda.dto.EmployeeStatusDTO;
+import com.senda.dto.*;
 import com.senda.entity.Employee;
 import com.senda.result.PageResult;
 import com.senda.result.Result;
@@ -101,4 +98,27 @@ public class EmployeeController {
         return Result.success(status.toString());
     }
 
+    /**
+     * 根据id查询员工
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public Result<Employee> selectById(@PathVariable Long id) {
+        log.info("根据id查询员工:{}", id);
+        Employee employee = employeeService.selectById(id);
+        return Result.success(employee);
+    }
+
+    /**
+     * 修改员工信息
+     * @param employeeDTO
+     * @return
+     */
+    @PutMapping
+    public Result<String> update(@RequestBody EmployeeDTO employeeDTO) {
+        log.info("修改员工信息:{}", employeeDTO);
+        employeeService.update(employeeDTO);
+        return Result.success(employeeDTO.getId().toString());
+    }
 }

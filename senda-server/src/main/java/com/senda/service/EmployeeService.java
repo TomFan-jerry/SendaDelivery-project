@@ -1,9 +1,6 @@
 package com.senda.service;
 
-import com.senda.dto.EmployeeDTO;
-import com.senda.dto.EmployeeLoginDTO;
-import com.senda.dto.EmployeePageQueryDTO;
-import com.senda.dto.EmployeeStatusDTO;
+import com.senda.dto.*;
 import com.senda.entity.Employee;
 import com.senda.result.PageResult;
 
@@ -34,4 +31,17 @@ public interface EmployeeService {
      * @param employeeStatusDTO
      */
     void setStatus(EmployeeStatusDTO employeeStatusDTO);
+
+    /**
+     * 根据id查询员工
+     * @param id
+     * @return
+     */
+    Employee selectById(Long id);
+
+    /**
+     * 修改员工信息
+     * @param employeeDTO
+     */
+    void update(EmployeeDTO employeeDTO);
 }
