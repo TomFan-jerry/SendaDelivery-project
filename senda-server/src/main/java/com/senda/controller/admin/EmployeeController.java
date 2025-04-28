@@ -3,6 +3,7 @@ package com.senda.controller.admin;
 import com.senda.dto.EmployeeDTO;
 import com.senda.dto.EmployeeLoginDTO;
 import com.senda.dto.EmployeePageQueryDTO;
+import com.senda.dto.EmployeeStatusDTO;
 import com.senda.entity.Employee;
 import com.senda.result.PageResult;
 import com.senda.result.Result;
@@ -76,16 +77,28 @@ public class EmployeeController {
 
     /**
      * 员工分页查询
-     * @param name
-     * @param page
-     * @param pageSize
+     * @param employeePageQueryDTO
      * @return
      */
-    //TODO 优化数据传输
     @GetMapping("/page")
     public Result<PageResult<Employee>> employeePage(EmployeePageQueryDTO employeePageQueryDTO) {
+        log.info("员工分页查询:{}", employeePageQueryDTO);
         PageResult<Employee> pageResult = employeeService.employeePage(employeePageQueryDTO);
         return Result.success(null, pageResult);
+    }
+
+    /**
+     * 修改员工账号状态
+     * @param status
+     * @param employeeStatusDTO
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    public Result<String> setStatus(@PathVariable Integer status, EmployeeStatusDTO employeeStatusDTO) {
+        employeeStatusDTO.setStatus(status);
+        log.info("修改员工账号状态:{}", employeeStatusDTO);
+        employeeService.setStatus(employeeStatusDTO);
+        return Result.success(status.toString());
     }
 
 }

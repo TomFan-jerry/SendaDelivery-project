@@ -8,6 +8,7 @@ import com.senda.constant.StatusConstant;
 import com.senda.dto.EmployeeDTO;
 import com.senda.dto.EmployeeLoginDTO;
 import com.senda.dto.EmployeePageQueryDTO;
+import com.senda.dto.EmployeeStatusDTO;
 import com.senda.entity.Employee;
 import com.senda.exceptions.AccountLockedException;
 import com.senda.exceptions.AccountNotFoundException;
@@ -92,10 +93,15 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .setCreateUser(Long.valueOf(claims.get("id").toString())) //创建人
                 .setUpdateUser(Long.valueOf(claims.get("id").toString())); //修改人
 
+        //插入数据
         employeeMapper.insert(employee);
     }
 
-    //员工分页查询
+    /**
+     * 员工分页查询
+     * @param employeePageQueryDTO
+     * @return
+     */
     @Override
     public PageResult<Employee> employeePage(EmployeePageQueryDTO employeePageQueryDTO) {
         //构建分页对象
@@ -120,4 +126,26 @@ public class EmployeeServiceImpl implements EmployeeService {
         return pageResult;
     }
 
+    /**
+     * 修改员工账号状态
+     * @param employeeStatusDTO
+     */
+    @Override
+    public void setStatus(EmployeeStatusDTO employeeStatusDTO) {
+        Employee employee = new Employee();
+
+        //对象属性拷贝
+        BeanUtils.copyProperties(employeeStatusDTO, employee);
+
+        //获取操作人id，即当前登陆的员工的id（获取请求头中的jwt令牌并解析）
+        String jwt = httpServletRequest.getHeader("token");
+        Claims claims = JwtUtils.parseToken(jwt);
+
+        //完善员工信息
+        employee.setUpdateTime(LocalDateTime.now()) //修改时间
+                .setUpdateUser(Long.valueOf(claims.get("id").toString())); //修改人
+
+        //更新数据
+        employeeMapper.updateById(employee);
+    }
 }
