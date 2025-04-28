@@ -1,6 +1,8 @@
 package com.senda.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.senda.constant.MessageConstant;
@@ -100,11 +102,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         //构建查询条件
         String name = employeePageQueryDTO.getName();
 
-        QueryWrapper<Employee> employeeQueryWrapper = new QueryWrapper<Employee>()
-                .orderBy(false, false, "update_time");
+        LambdaQueryWrapper<Employee> employeeQueryWrapper = new LambdaQueryWrapper<Employee>()
+                .orderByAsc(Employee::getCreateTime);
 
         if (name != null && !name.trim().isEmpty()) { //若name不为null且不为空值则进行模糊查询
-            employeeQueryWrapper.like("name", name);
+            employeeQueryWrapper.like(Employee::getName, name);
         }
 
         //执行查询
@@ -143,8 +145,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee selectById(Long id) {
         //执行查询
-        Employee result = employeeMapper.selectById(id);
-        return result;
+        return employeeMapper.selectById(id);
     }
 
     /**
@@ -184,11 +185,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeEditPasswordDTO.setNewPassword(passwordEncoder.encode(employeeEditPasswordDTO.getNewPassword()));
 
         //构建修改条件
-        UpdateWrapper<Employee> wrapper = new UpdateWrapper<Employee>()
-                .set("password", employeeEditPasswordDTO.getNewPassword())
-                .set("update_time", LocalDateTime.now())
-                .set("update_user", JwtUserContext.getCurrentUserId())
-                .eq("id", JwtUserContext.getCurrentUserId());
+        LambdaUpdateWrapper<Employee> wrapper = new LambdaUpdateWrapper<Employee>()
+                .set(Employee::getPassword, employeeEditPasswordDTO.getNewPassword())
+                .set(Employee::getUpdateTime, LocalDateTime.now())
+                .set(Employee::getUpdateUser, JwtUserContext.getCurrentUserId())
+                .eq(Employee::getId, JwtUserContext.getCurrentUserId());
 
         //执行修改
         employeeMapper.update(wrapper);

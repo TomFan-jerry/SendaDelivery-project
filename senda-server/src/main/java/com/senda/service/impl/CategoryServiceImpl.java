@@ -1,6 +1,6 @@
 package com.senda.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.senda.dto.CategoryPageQueryDTO;
 import com.senda.entity.Category;
@@ -30,14 +30,14 @@ public class CategoryServiceImpl implements CategoryService {
         String name = categoryPageQueryDTO.getName();
         Integer type = categoryPageQueryDTO.getType();
 
-        QueryWrapper<Category> categoryQueryWrapper = new QueryWrapper<Category>()
-                .orderBy(false, true, "update_time");
+        LambdaQueryWrapper<Category> categoryQueryWrapper = new LambdaQueryWrapper<Category>()
+                .orderByDesc(Category::getUpdateTime);
 
         if (name != null && !name.trim().isEmpty()) { //若name不为null且不为空值则进行模糊查询
-            categoryQueryWrapper.like("name", name);
+            categoryQueryWrapper.like(Category::getName, name);
         }
         if (type != null) { //若type不为null则进行查询
-            categoryQueryWrapper.eq("type", type);
+            categoryQueryWrapper.eq(Category::getType, type);
         }
 
         //执行查询
