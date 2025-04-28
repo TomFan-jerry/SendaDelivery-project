@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class EmployeePageQueryDTO {
 
-    private String name; //员工姓名
-    private int page; //页码
-    private int pageSize; //每页显示记录数
+    private String name; // 员工姓名
+    private int page; // 页码
+    private int pageSize; // 每页显示记录数
 }

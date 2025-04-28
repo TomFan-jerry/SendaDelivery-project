@@ -99,19 +99,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //构建查询条件
         String name = employeePageQueryDTO.getName();
+
         QueryWrapper<Employee> employeeQueryWrapper = new QueryWrapper<Employee>()
                 .orderBy(false, false, "update_time");
+
         if (name != null && !name.trim().isEmpty()) { //若name不为null且不为空值则进行模糊查询
             employeeQueryWrapper.like("name", name);
         }
 
         //执行查询
-        Page<Employee> result = employeeMapper.selectPage(pagePram, employeeQueryWrapper);
+        Page<Employee> page = employeeMapper.selectPage(pagePram, employeeQueryWrapper);
 
         //返回值封装
         PageResult<Employee> pageResult = new PageResult<>();
-        pageResult.setTotal(result.getTotal())
-                .setRecords(result.getRecords());
+        pageResult.setTotal(page.getTotal())
+                .setRecords(page.getRecords());
 
         return pageResult;
     }
