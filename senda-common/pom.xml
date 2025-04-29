@@ -18,6 +18,12 @@
     </properties>
 
     <dependencies>
+        <!--senda-pojo-->
+        <dependency>
+            <groupId>com.senda</groupId>
+            <artifactId>senda-pojo</artifactId>
+        </dependency>
+
         <!--jwt-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

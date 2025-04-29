@@ -13,6 +13,7 @@ public class MessageConstant {
     public static final String TOKEN_TIMEOUT = "登录已过期";
     public static final String ALREADY_EXISTS = "已存在";
     public static final String UNKNOWN_ERROR = "未知错误";
+    public static final String MISSING_AUTOFILL_ANNOTATION = "方法缺少 @AutoFill 注解";
     public static final String USER_NOT_LOGIN = "用户未登录";
     public static final String CATEGORY_BE_RELATED_BY_SETMEAL = "当前分类关联了套餐,不能删除";
     public static final String CATEGORY_BE_RELATED_BY_DISH = "当前分类关联了菜品,不能删除";

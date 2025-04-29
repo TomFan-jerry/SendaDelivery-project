@@ -1,9 +1,10 @@
 package com.senda.controller.admin;
 
 import com.senda.annotation.AutoFill;
-import com.senda.context.JwtUserContext;
+import com.senda.context.AutoFillEntityContext;
 import com.senda.dto.*;
 import com.senda.entity.Employee;
+import com.senda.enumeration.EntityType;
 import com.senda.enumeration.OperationType;
 import com.senda.result.PageResult;
 import com.senda.result.Result;
@@ -15,7 +16,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,12 +95,12 @@ public class EmployeeController {
      * @return
      */
     @PostMapping("/status/{status}")
-    @AutoFill(value = OperationType.UPDATE)
+    @AutoFill(operationType = OperationType.UPDATE, entityType = EntityType.EMPLOYEE)
     public Result<String> setStatus(EmployeeStatusDTO employeeStatusDTO) {
         log.info("修改员工账号状态:{}", employeeStatusDTO);
 
-        //对象属性拷贝
-        Employee employee = new Employee();
+        //将数据拷贝到AOP中填充后的Employee实体对象
+        Employee employee = (Employee) AutoFillEntityContext.getCurrentEntity();
         BeanUtils.copyProperties(employeeStatusDTO, employee);
 
         //更新数据
@@ -127,17 +127,13 @@ public class EmployeeController {
      * @return
      */
     @PutMapping
-    @AutoFill(value = OperationType.UPDATE)
+    @AutoFill(operationType = OperationType.UPDATE, entityType = EntityType.EMPLOYEE)
     public Result<String> update(@RequestBody EmployeeDTO employeeDTO) {
         log.info("修改员工信息:{}", employeeDTO);
 
-        //对象属性拷贝
-        Employee employee = new Employee();
+        //将数据拷贝到AOP中填充后的Employee实体对象
+        Employee employee = (Employee) AutoFillEntityContext.getCurrentEntity();
         BeanUtils.copyProperties(employeeDTO, employee);
-
-        //完善员工信息
-        employee.setUpdateTime(LocalDateTime.now()) //修改时间
-                .setUpdateUser(JwtUserContext.getCurrentUserId()); //修改人
 
         //更新数据
         employeeService.updateById(employee);

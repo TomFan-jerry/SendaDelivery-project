@@ -7,9 +7,11 @@ import com.senda.annotation.AutoFill;
 import com.senda.constant.MessageConstant;
 import com.senda.constant.PasswordConstant;
 import com.senda.constant.StatusConstant;
+import com.senda.context.AutoFillEntityContext;
 import com.senda.context.JwtUserContext;
 import com.senda.dto.*;
 import com.senda.entity.Employee;
+import com.senda.enumeration.EntityType;
 import com.senda.enumeration.OperationType;
 import com.senda.exceptions.AccountLockedException;
 import com.senda.exceptions.AccountNotFoundException;
@@ -22,14 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements IEmployeeService {
-
-    @Autowired
-    private Employee employee;
 
     @Autowired
     private PasswordEncoder passwordEncoder; // 直接注入加密器
@@ -72,9 +70,10 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
      * @param employeeDTO
      */
     @Override
-    @AutoFill(value = OperationType.INSERT)
+    @AutoFill(operationType = OperationType.INSERT, entityType = EntityType.EMPLOYEE)
     public void add(EmployeeDTO employeeDTO) {
-        //对象属性拷贝
+        //将数据拷贝到AOP中填充后的Employee实体对象
+        Employee employee = (Employee) AutoFillEntityContext.getCurrentEntity();
         BeanUtils.copyProperties(employeeDTO, employee);
 
         //完善员工信息
@@ -121,7 +120,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
      * @param employeeEditPasswordDTO
      */
     @Override
-    @AutoFill(value = OperationType.UPDATE)
+    @AutoFill(operationType = OperationType.UPDATE, entityType = EntityType.EMPLOYEE)
     public void editPassword(EmployeeEditPasswordDTO employeeEditPasswordDTO) {
         // 先验证原密码是否正确（哈希加密算法不可逆，无法直接查询比对）
         if (!passwordEncoder.matches(
@@ -133,15 +132,17 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);  //原始密码错误抛出异常
         }
 
+        //获取AOP自动填充后的实体对象
+        Employee employee = (Employee) AutoFillEntityContext.getCurrentEntity();
+
         //新密码加密
         employeeEditPasswordDTO.setNewPassword(passwordEncoder.encode(employeeEditPasswordDTO.getNewPassword()));
 
+        //继续设置修改条件
+        employee.setId(JwtUserContext.getCurrentUserId())
+                .setPassword(employeeEditPasswordDTO.getNewPassword());
+
         //执行修改
-        this.lambdaUpdate()
-                .set(Employee::getPassword, employeeEditPasswordDTO.getNewPassword())
-                .set(Employee::getUpdateTime, LocalDateTime.now())
-                .set(Employee::getUpdateUser, JwtUserContext.getCurrentUserId())
-                .eq(Employee::getId, JwtUserContext.getCurrentUserId())
-                .update();
+        this.updateById(employee);
     }
 }
