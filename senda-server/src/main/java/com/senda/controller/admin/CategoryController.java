@@ -4,7 +4,7 @@ import com.senda.dto.CategoryPageQueryDTO;
 import com.senda.entity.Category;
 import com.senda.result.PageResult;
 import com.senda.result.Result;
-import com.senda.service.CategoryService;
+import com.senda.service.ICategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
 
     @Autowired
-    private CategoryService categoryService;
+    private ICategoryService ICategoryService;
 
     /**
      * 分类分页查询
@@ -27,7 +27,7 @@ public class CategoryController {
     @GetMapping("/page")
     public Result<PageResult<Category>> categoryPage(CategoryPageQueryDTO categoryPageQueryDTO) {
         log.info("分类分页查询:{}", categoryPageQueryDTO);
-        PageResult<Category> pageResult = categoryService.categoryPage(categoryPageQueryDTO);
+        PageResult<Category> pageResult = ICategoryService.categoryPage(categoryPageQueryDTO);
         return Result.success(pageResult);
     }
 

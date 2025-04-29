@@ -1,10 +1,8 @@
 package com.senda.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.senda.constant.MessageConstant;
 import com.senda.constant.PasswordConstant;
 import com.senda.constant.StatusConstant;
@@ -16,7 +14,7 @@ import com.senda.exceptions.AccountNotFoundException;
 import com.senda.exceptions.PasswordErrorException;
 import com.senda.mapper.EmployeeMapper;
 import com.senda.result.PageResult;
-import com.senda.service.EmployeeService;
+import com.senda.service.IEmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,13 +24,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements IEmployeeService {
 
     @Autowired
     private Employee employee;
-
-    @Autowired
-    private EmployeeMapper employeeMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder; // 直接注入加密器
@@ -45,7 +40,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee login(EmployeeLoginDTO employeeLoginDTO) {
         // 1. 根据用户名查数据库
-        Employee dbEmployee = employeeMapper.getByUsername(employeeLoginDTO.getUsername());
+        Employee dbEmployee = lambdaQuery()
+                .eq(Employee::getUsername, employeeLoginDTO.getUsername())
+                .one();
         if (dbEmployee == null) {
             // 用户不存在
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
@@ -86,7 +83,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .setUpdateUser(JwtUserContext.getCurrentUserId()); //修改人
 
         //插入数据
-        employeeMapper.insert(employee);
+        this.save(employee);
     }
 
     /**
@@ -110,7 +107,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         //执行查询
-        Page<Employee> page = employeeMapper.selectPage(pagePram, employeeQueryWrapper);
+        Page<Employee> page = this.page(pagePram, employeeQueryWrapper);
 
         //返回值封装
         PageResult<Employee> pageResult = new PageResult<>();
@@ -118,51 +115,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .setRecords(page.getRecords());
 
         return pageResult;
-    }
-
-    /**
-     * 修改员工账号状态
-     * @param employeeStatusDTO
-     */
-    @Override
-    public void setStatus(EmployeeStatusDTO employeeStatusDTO) {
-        //对象属性拷贝
-        BeanUtils.copyProperties(employeeStatusDTO, employee);
-
-        //完善员工信息
-        employee.setUpdateTime(LocalDateTime.now()) //修改时间
-                .setUpdateUser(JwtUserContext.getCurrentUserId()); //修改人
-
-        //更新数据
-        employeeMapper.updateById(employee);
-    }
-
-    /**
-     * 根据id查询员工
-     * @param id
-     * @return
-     */
-    @Override
-    public Employee selectById(Long id) {
-        //执行查询
-        return employeeMapper.selectById(id);
-    }
-
-    /**
-     * 修改员工信息
-     * @param employeeDTO
-     */
-    @Override
-    public void update(EmployeeDTO employeeDTO) {
-        //对象属性拷贝
-        BeanUtils.copyProperties(employeeDTO, employee);
-
-        //完善员工信息
-        employee.setUpdateTime(LocalDateTime.now()) //修改时间
-                .setUpdateUser(JwtUserContext.getCurrentUserId()); //修改人
-
-        //更新数据
-        employeeMapper.updateById(employee);
     }
 
     /**
@@ -174,7 +126,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 先验证原密码是否正确（哈希加密算法不可逆，无法直接查询比对）
         if (!passwordEncoder.matches(
                 employeeEditPasswordDTO.getOldPassword(),
-                employeeMapper.selectById(
+                this.getById(
                         JwtUserContext.getCurrentUserId()
                 ).getPassword())
         ) {
@@ -184,14 +136,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         //新密码加密
         employeeEditPasswordDTO.setNewPassword(passwordEncoder.encode(employeeEditPasswordDTO.getNewPassword()));
 
-        //构建修改条件
-        LambdaUpdateWrapper<Employee> wrapper = new LambdaUpdateWrapper<Employee>()
+        //执行修改
+        this.lambdaUpdate()
                 .set(Employee::getPassword, employeeEditPasswordDTO.getNewPassword())
                 .set(Employee::getUpdateTime, LocalDateTime.now())
                 .set(Employee::getUpdateUser, JwtUserContext.getCurrentUserId())
-                .eq(Employee::getId, JwtUserContext.getCurrentUserId());
-
-        //执行修改
-        employeeMapper.update(wrapper);
+                .eq(Employee::getId, JwtUserContext.getCurrentUserId())
+                .update();
     }
 }

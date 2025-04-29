@@ -1,10 +1,11 @@
 package com.senda.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.senda.dto.CategoryPageQueryDTO;
 import com.senda.entity.Category;
 import com.senda.result.PageResult;
 
-public interface CategoryService {
+public interface ICategoryService extends IService<Category> {
 
     /**
      * 分类分页查询

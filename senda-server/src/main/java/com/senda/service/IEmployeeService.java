@@ -1,10 +1,11 @@
 package com.senda.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.senda.dto.*;
 import com.senda.entity.Employee;
 import com.senda.result.PageResult;
 
-public interface EmployeeService {
+public interface IEmployeeService extends IService<Employee> {
 
     /**
      * 员工登录
@@ -25,25 +26,6 @@ public interface EmployeeService {
      * @return
      */
     PageResult<Employee> employeePage(EmployeePageQueryDTO employeePageQueryDTO);
-
-    /**
-     * 修改员工账号状态
-     * @param employeeStatusDTO
-     */
-    void setStatus(EmployeeStatusDTO employeeStatusDTO);
-
-    /**
-     * 根据id查询员工
-     * @param id
-     * @return
-     */
-    Employee selectById(Long id);
-
-    /**
-     * 修改员工信息
-     * @param employeeDTO
-     */
-    void update(EmployeeDTO employeeDTO);
 
     /**
      * 修改密码

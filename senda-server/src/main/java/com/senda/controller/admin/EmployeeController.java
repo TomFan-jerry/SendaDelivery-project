@@ -1,16 +1,19 @@
 package com.senda.controller.admin;
 
+import com.senda.context.JwtUserContext;
 import com.senda.dto.*;
 import com.senda.entity.Employee;
 import com.senda.result.PageResult;
 import com.senda.result.Result;
-import com.senda.service.EmployeeService;
+import com.senda.service.IEmployeeService;
 import com.senda.utils.JwtUtils;
 import com.senda.vo.EmployeeLoginVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +23,7 @@ import java.util.Map;
 public class EmployeeController {
 
     @Autowired
-    private EmployeeService employeeService;
+    private IEmployeeService employeeService;
 
     /**
      * 员工登录
@@ -94,7 +97,18 @@ public class EmployeeController {
     public Result<String> setStatus(@PathVariable Integer status, EmployeeStatusDTO employeeStatusDTO) {
         employeeStatusDTO.setStatus(status);
         log.info("修改员工账号状态:{}", employeeStatusDTO);
-        employeeService.setStatus(employeeStatusDTO);
+
+        //对象属性拷贝
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeStatusDTO, employee);
+
+        //完善员工信息
+        employee.setUpdateTime(LocalDateTime.now()) //修改时间
+                .setUpdateUser(JwtUserContext.getCurrentUserId()); //修改人
+
+        //更新数据
+        employeeService.updateById(employee);
+
         return Result.success(status.toString());
     }
 
@@ -106,7 +120,7 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public Result<Employee> selectById(@PathVariable Long id) {
         log.info("根据id查询员工:{}", id);
-        Employee employee = employeeService.selectById(id);
+        Employee employee = employeeService.getById(id);
         return Result.success(employee);
     }
 
@@ -118,7 +132,18 @@ public class EmployeeController {
     @PutMapping
     public Result<String> update(@RequestBody EmployeeDTO employeeDTO) {
         log.info("修改员工信息:{}", employeeDTO);
-        employeeService.update(employeeDTO);
+
+        //对象属性拷贝
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        //完善员工信息
+        employee.setUpdateTime(LocalDateTime.now()) //修改时间
+                .setUpdateUser(JwtUserContext.getCurrentUserId()); //修改人
+
+        //更新数据
+        employeeService.updateById(employee);
+
         return Result.success(employeeDTO.getId().toString());
     }
 

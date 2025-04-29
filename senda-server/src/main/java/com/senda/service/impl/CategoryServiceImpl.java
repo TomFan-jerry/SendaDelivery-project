@@ -2,19 +2,16 @@ package com.senda.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.senda.dto.CategoryPageQueryDTO;
 import com.senda.entity.Category;
 import com.senda.mapper.CategoryMapper;
 import com.senda.result.PageResult;
-import com.senda.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.senda.service.ICategoryService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CategoryServiceImpl implements CategoryService {
-
-    @Autowired
-    private CategoryMapper categoryMapper;
+public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements ICategoryService {
 
     /**
      * 分类分页查询
@@ -31,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
         Integer type = categoryPageQueryDTO.getType();
 
         LambdaQueryWrapper<Category> categoryQueryWrapper = new LambdaQueryWrapper<Category>()
-                .orderByDesc(Category::getUpdateTime);
+                .orderByAsc(Category::getUpdateTime);
 
         if (name != null && !name.trim().isEmpty()) { //若name不为null且不为空值则进行模糊查询
             categoryQueryWrapper.like(Category::getName, name);
@@ -41,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         //执行查询
-        Page<Category> page = categoryMapper.selectPage(pagePram, categoryQueryWrapper);
+        Page<Category> page = this.page(pagePram, categoryQueryWrapper);
 
         //返回值封装
         PageResult<Category> pageResult = new PageResult<>();
