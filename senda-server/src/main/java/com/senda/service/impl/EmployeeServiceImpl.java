@@ -3,12 +3,14 @@ package com.senda.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.senda.annotation.AutoFill;
 import com.senda.constant.MessageConstant;
 import com.senda.constant.PasswordConstant;
 import com.senda.constant.StatusConstant;
 import com.senda.context.JwtUserContext;
 import com.senda.dto.*;
 import com.senda.entity.Employee;
+import com.senda.enumeration.OperationType;
 import com.senda.exceptions.AccountLockedException;
 import com.senda.exceptions.AccountNotFoundException;
 import com.senda.exceptions.PasswordErrorException;
@@ -70,17 +72,14 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
      * @param employeeDTO
      */
     @Override
+    @AutoFill(value = OperationType.INSERT)
     public void add(EmployeeDTO employeeDTO) {
         //对象属性拷贝
         BeanUtils.copyProperties(employeeDTO, employee);
 
         //完善员工信息
         employee.setStatus(StatusConstant.ENABLE) //帐号状态
-                .setPassword(passwordEncoder.encode(PasswordConstant.DEFAULT_PASSWORD)) //密码加密
-                .setCreateTime(LocalDateTime.now()) //创建时间
-                .setUpdateTime(LocalDateTime.now()) //修改时间
-                .setCreateUser(JwtUserContext.getCurrentUserId()) //创建人
-                .setUpdateUser(JwtUserContext.getCurrentUserId()); //修改人
+                .setPassword(passwordEncoder.encode(PasswordConstant.DEFAULT_PASSWORD)); //密码加密
 
         //插入数据
         this.save(employee);
@@ -122,6 +121,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
      * @param employeeEditPasswordDTO
      */
     @Override
+    @AutoFill(value = OperationType.UPDATE)
     public void editPassword(EmployeeEditPasswordDTO employeeEditPasswordDTO) {
         // 先验证原密码是否正确（哈希加密算法不可逆，无法直接查询比对）
         if (!passwordEncoder.matches(

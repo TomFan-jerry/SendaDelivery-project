@@ -73,6 +73,12 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!--Spring AOP-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
         <!--fastjson（实现 JSON 序列化）-->
         <dependency>
             <groupId>com.alibaba</groupId>

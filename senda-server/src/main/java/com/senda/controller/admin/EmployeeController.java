@@ -1,8 +1,10 @@
 package com.senda.controller.admin;
 
+import com.senda.annotation.AutoFill;
 import com.senda.context.JwtUserContext;
 import com.senda.dto.*;
 import com.senda.entity.Employee;
+import com.senda.enumeration.OperationType;
 import com.senda.result.PageResult;
 import com.senda.result.Result;
 import com.senda.service.IEmployeeService;
@@ -89,27 +91,22 @@ public class EmployeeController {
 
     /**
      * 修改员工账号状态
-     * @param status
      * @param employeeStatusDTO
      * @return
      */
     @PostMapping("/status/{status}")
-    public Result<String> setStatus(@PathVariable Integer status, EmployeeStatusDTO employeeStatusDTO) {
-        employeeStatusDTO.setStatus(status);
+    @AutoFill(value = OperationType.UPDATE)
+    public Result<String> setStatus(EmployeeStatusDTO employeeStatusDTO) {
         log.info("修改员工账号状态:{}", employeeStatusDTO);
 
         //对象属性拷贝
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeStatusDTO, employee);
 
-        //完善员工信息
-        employee.setUpdateTime(LocalDateTime.now()) //修改时间
-                .setUpdateUser(JwtUserContext.getCurrentUserId()); //修改人
-
         //更新数据
         employeeService.updateById(employee);
 
-        return Result.success(status.toString());
+        return Result.success(employeeStatusDTO.getStatus().toString());
     }
 
     /**
@@ -130,6 +127,7 @@ public class EmployeeController {
      * @return
      */
     @PutMapping
+    @AutoFill(value = OperationType.UPDATE)
     public Result<String> update(@RequestBody EmployeeDTO employeeDTO) {
         log.info("修改员工信息:{}", employeeDTO);
 
