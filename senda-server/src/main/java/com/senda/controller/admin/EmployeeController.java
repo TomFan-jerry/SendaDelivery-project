@@ -71,10 +71,10 @@ public class EmployeeController {
      * @return
      */
     @PostMapping
-    public Result<EmployeeDTO> add(@RequestBody EmployeeDTO employeeDTO) {
+    public Result<String> add(@RequestBody EmployeeDTO employeeDTO) {
         log.info("新增员工:{}", employeeDTO);
         employeeService.add(employeeDTO);
-        return Result.success(employeeDTO);
+        return Result.success(employeeDTO.toString());
     }
 
     /**

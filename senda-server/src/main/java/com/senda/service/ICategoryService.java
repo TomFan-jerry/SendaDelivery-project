@@ -1,6 +1,7 @@
 package com.senda.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.senda.dto.CategoryDTO;
 import com.senda.dto.CategoryPageQueryDTO;
 import com.senda.entity.Category;
 import com.senda.result.PageResult;
@@ -13,4 +14,10 @@ public interface ICategoryService extends IService<Category> {
      * @return
      */
     PageResult<Category> categoryPage(CategoryPageQueryDTO categoryPageQueryDTO);
+
+    /**
+     * 新增分类
+     * @param categoryDTO
+     */
+    void add(CategoryDTO categoryDTO);
 }
