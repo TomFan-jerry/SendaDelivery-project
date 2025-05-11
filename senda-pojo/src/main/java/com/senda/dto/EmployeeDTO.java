@@ -20,4 +20,5 @@ public class EmployeeDTO {
     private String phone; // phone
     private String sex; // sex
     private String idNumber; // idNumber
+    private Integer status; // status
 }

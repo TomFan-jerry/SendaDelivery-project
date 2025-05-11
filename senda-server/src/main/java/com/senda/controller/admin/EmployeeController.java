@@ -91,22 +91,22 @@ public class EmployeeController {
 
     /**
      * 修改员工账号状态
-     * @param employeeStatusDTO
+     * @param employeeDTO
      * @return
      */
     @PostMapping("/status/{status}")
     @AutoFill(operationType = OperationType.UPDATE, entityType = EntityType.EMPLOYEE)
-    public Result<String> setStatus(EmployeeStatusDTO employeeStatusDTO) {
-        log.info("修改员工账号状态:{}", employeeStatusDTO);
+    public Result<String> setStatus(EmployeeDTO employeeDTO) {
+        log.info("修改员工账号状态:{}", employeeDTO);
 
         //将数据拷贝到AOP中填充后的Employee实体对象
         Employee employee = (Employee) AutoFillEntityContext.getCurrentEntity();
-        BeanUtils.copyProperties(employeeStatusDTO, employee);
+        BeanUtils.copyProperties(employeeDTO, employee);
 
         //更新数据
         employeeService.updateById(employee);
 
-        return Result.success(employeeStatusDTO.getStatus().toString());
+        return Result.success(employeeDTO.getStatus().toString());
     }
 
     /**

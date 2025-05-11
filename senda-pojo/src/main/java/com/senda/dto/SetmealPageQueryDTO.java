@@ -6,14 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 /**
- * EmployeeStatus DTO
+ * SetmealPageQuery DTO
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmployeeStatusDTO {
+public class SetmealPageQueryDTO {
 
-    private Long id; // id
+    private Long categoryId; // categoryId
+    private String name; // name
     private Integer status; // status
+    private int page; // 页码
+    private int pageSize; // 每页显示记录数
 }

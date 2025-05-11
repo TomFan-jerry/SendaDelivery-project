@@ -17,6 +17,8 @@ import com.senda.service.ICategoryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements ICategoryService {
 
@@ -71,5 +73,15 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
         //插入数据
         this.save(category);
+    }
+
+    @Override
+    public List<Category> getByType(Integer type) {
+        //构建查询条件
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<Category>()
+                .eq(Category::getType, type);
+
+        //执行查询并返回数据
+        return this.list(queryWrapper);
     }
 }

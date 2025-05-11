@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.senda.mapper.DishMapper">
+
+    <!--菜品分页查询-->
+    <select id="pageDishWithCategory" resultType="com.senda.vo.DishVO">
+        select dish.id,
+        dish.name,
+        dish.category_id,
+        dish.price,
+        dish.image,
+        dish.description,
+        dish.status,
+        dish.create_time,
+        dish.update_time,
+        dish.create_user,
+        dish.update_user,
+        category.name as categoryName
+        from dish
+        left join category
+        on dish.category_id = category.id
+        <where>
+            <if test="dishPageQueryDTO.name != null">
+               and dish.name like concat('%', #{dishPageQueryDTO.name}, '%')
+            </if>
+            <if test="dishPageQueryDTO.categoryId != null">
+               and dish.category_id = #{dishPageQueryDTO.categoryId}
+            </if>
+            <if test="dishPageQueryDTO.status != null">
+               and dish.status = #{dishPageQueryDTO.status}
+            </if>
+        </where>
+        order by dish.update_time
+    </select>
+
+</mapper>

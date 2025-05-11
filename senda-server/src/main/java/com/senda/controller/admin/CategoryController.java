@@ -1,11 +1,9 @@
 package com.senda.controller.admin;
 
 import com.senda.annotation.AutoFill;
-import com.senda.constant.AutoFillConstant;
 import com.senda.context.AutoFillEntityContext;
 import com.senda.dto.CategoryDTO;
 import com.senda.dto.CategoryPageQueryDTO;
-import com.senda.dto.CategoryStatusDTO;
 import com.senda.entity.Category;
 import com.senda.enumeration.EntityType;
 import com.senda.enumeration.OperationType;
@@ -16,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -83,22 +83,28 @@ public class CategoryController {
 
     /**
      * 启用、禁用分类
-     * @param categoryStatusDTO
+     * @param categoryDTO
      * @return
      */
     @PostMapping("/status/{status}")
     @AutoFill(operationType = OperationType.UPDATE, entityType = EntityType.CATEGORY)
-    public Result<String> setStatus(CategoryStatusDTO categoryStatusDTO) {
-        log.info("启用、禁用分类:{}", categoryStatusDTO);
+    public Result<String> setStatus(CategoryDTO categoryDTO) {
+        log.info("启用、禁用分类:{}", categoryDTO);
 
         //将数据拷贝到AOP中填充后的Employee实体对象
         Category category = (Category) AutoFillEntityContext.getCurrentEntity();
-        BeanUtils.copyProperties(categoryStatusDTO, category);
+        BeanUtils.copyProperties(categoryDTO, category);
 
         //更新数据
         categoryService.updateById(category);
 
-        return Result.success(categoryStatusDTO.getStatus().toString());
+        return Result.success(categoryDTO.getStatus().toString());
+    }
+
+    @GetMapping("/list")
+    public Result<List<Category>> selectByType(Integer type) {
+        List<Category> categoryList = categoryService.getByType(type);
+        return Result.success(categoryList);
     }
 
 }
