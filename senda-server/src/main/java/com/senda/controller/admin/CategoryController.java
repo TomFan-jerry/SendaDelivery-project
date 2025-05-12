@@ -101,6 +101,11 @@ public class CategoryController {
         return Result.success(categoryDTO.getStatus().toString());
     }
 
+    /**
+     * 根据类型查询分类
+     * @param type
+     * @return
+     */
     @GetMapping("/list")
     public Result<List<Category>> selectByType(Integer type) {
         List<Category> categoryList = categoryService.getByType(type);

@@ -75,6 +75,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         this.save(category);
     }
 
+    /**
+     * 根据类型查询分类
+     * @param type
+     * @return
+     */
     @Override
     public List<Category> getByType(Integer type) {
         //构建查询条件

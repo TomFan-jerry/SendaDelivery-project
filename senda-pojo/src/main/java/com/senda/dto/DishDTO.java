@@ -1,11 +1,13 @@
 package com.senda.dto;
 
+import com.senda.entity.DishFlavor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Dish DTO
@@ -23,4 +25,5 @@ public class DishDTO {
     private String image; // 图片
     private String description; // 描述信息
     private Integer status; // 0 停售 1 起售
+    private List<DishFlavor> flavors; // 口味
 }

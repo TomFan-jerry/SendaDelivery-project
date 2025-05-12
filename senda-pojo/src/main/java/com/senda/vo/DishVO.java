@@ -1,5 +1,6 @@
 package com.senda.vo;
 
+import com.senda.entity.DishFlavor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Dish VO
@@ -29,4 +31,5 @@ public class DishVO {
     private Long createUser; // 创建人
     private Long updateUser; // 修改人
     private String categoryName; // 菜品分类名称
+    private List<DishFlavor> flavors; // 口味
 }
