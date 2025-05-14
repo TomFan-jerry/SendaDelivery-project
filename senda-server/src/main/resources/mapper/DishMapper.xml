@@ -8,17 +8,17 @@
     <!--菜品分页查询-->
     <select id="pageDishWithCategory" resultType="com.senda.vo.DishVO">
         select dish.id,
-        dish.name,
-        dish.category_id,
-        dish.price,
-        dish.image,
-        dish.description,
-        dish.status,
-        dish.create_time,
-        dish.update_time,
-        dish.create_user,
-        dish.update_user,
-        category.name as categoryName
+               dish.name,
+               dish.category_id,
+               dish.price,
+               dish.image,
+               dish.description,
+               dish.status,
+               dish.create_time,
+               dish.update_time,
+               dish.create_user,
+               dish.update_user,
+               category.name as categoryName
         from dish
         left join category
         on dish.category_id = category.id

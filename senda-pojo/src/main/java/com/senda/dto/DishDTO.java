@@ -25,5 +25,5 @@ public class DishDTO {
     private String image; // 图片
     private String description; // 描述信息
     private Integer status; // 0 停售 1 起售
-    private List<DishFlavor> flavors; // 口味
+    private List<DishFlavor> flavors; // 菜品包含的口味
 }

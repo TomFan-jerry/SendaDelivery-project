@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class DishService extends ServiceImpl<DishMapper, Dish> implements IDishService {
+public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements IDishService {
 
     /**
      * 菜品分页查询
@@ -89,6 +89,11 @@ public class DishService extends ServiceImpl<DishMapper, Dish> implements IDishS
         Db.remove(queryWrapper);
     }
 
+    /**
+     * 根据id查询菜品
+     * @param id
+     * @return
+     */
     @Override
     public DishVO selectById(Long id) {
         //查询菜品信息

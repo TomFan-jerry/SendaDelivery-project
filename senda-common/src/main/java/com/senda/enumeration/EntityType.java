@@ -3,6 +3,7 @@ package com.senda.enumeration;
 import com.senda.entity.Category;
 import com.senda.entity.Dish;
 import com.senda.entity.Employee;
+import com.senda.entity.Setmeal;
 import lombok.Getter;
 
 @Getter
@@ -10,7 +11,8 @@ public enum EntityType {
 
     EMPLOYEE(Employee.class),
     CATEGORY(Category.class),
-    DISH(Dish.class);
+    DISH(Dish.class),
+    SETMEAL(Setmeal.class);
 
     // 每个枚举常量绑定一个实体类的 Class 类型，用于后续反射实例化对象
     private final Class<?> entityClass;
