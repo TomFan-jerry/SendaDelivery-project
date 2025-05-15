@@ -1,6 +1,6 @@
 spring:
   application:
-    name: example
+    name: Senda Delivery
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/senda_delivery
@@ -22,11 +22,6 @@ logging:
   level:
     org.springframework.jdbc.support.JdbcTransactionManager: debug
 
-#mybatis:
-#  configuration:
-#    map-underscore-to-camel-case: true
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true #下划线-驼峰命名转换
@@ -37,8 +32,17 @@ mybatis-plus:
       id-type: auto #id主键自增
 
 r2:
-  endpoint: "https://322c9f29618be2ca9a55df8b95862c5e.r2.cloudflarestorage.com"
-  access-key: "22bcb467192a6590c14b65923d916b8c"
-  secret-key: "f02cec7223abbd204146b0b46462939bb5bc56526769720d004252450467b032"
-  bucket-name: "senda-delivery-project"
-  public-endpoint: "https://pub-2cadb64652464d8aafe01bad4dabf27e.r2.dev"
+  endpoint: https://322c9f29618be2ca9a55df8b95862c5e.r2.cloudflarestorage.com
+  access-key: 22bcb467192a6590c14b65923d916b8c
+  secret-key: f02cec7223abbd204146b0b46462939bb5bc56526769720d004252450467b032
+  bucket-name: senda-delivery-project
+  public-endpoint: https://pub-2cadb64652464d8aafe01bad4dabf27e.r2.dev
+
+senda:
+  jwt:
+    admin-secret-key: sendaDeliveryAdminExampleSuperSecretKeyForHS256Algorithm
+    admin-ttl: 86400000 #24h(75686400000000-100y)
+    admin-token-name: token
+    user-secret-key: sendaDeliveryExampleUserSuperSecretKeyForHS256Algorithm
+    user-ttl: 86400000 #24h
+    user-token-name: authentication

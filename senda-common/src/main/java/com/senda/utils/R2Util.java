@@ -25,7 +25,7 @@ import java.util.UUID;
  * 3. 保持核心功能不变，优化配置管理方式
  */
 @Component
-public class R2Utils {
+public class R2Util {
 
     // ------------ 注入配置参数 ------------
 

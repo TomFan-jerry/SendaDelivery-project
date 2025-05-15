@@ -6,10 +6,11 @@ import com.senda.dto.*;
 import com.senda.entity.Employee;
 import com.senda.enumeration.EntityType;
 import com.senda.enumeration.OperationType;
+import com.senda.enumeration.TokenType;
 import com.senda.result.PageResult;
 import com.senda.result.Result;
 import com.senda.service.IEmployeeService;
-import com.senda.utils.JwtUtils;
+import com.senda.utils.JwtUtil;
 import com.senda.vo.EmployeeLoginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -27,6 +28,9 @@ public class EmployeeController {
     @Autowired
     private IEmployeeService employeeService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     /**
      * 员工登录
      * @param employeeLoginDTO
@@ -42,7 +46,7 @@ public class EmployeeController {
         claims.put("id", employee.getId());
         claims.put("name", employee.getName());
         claims.put("username", employee.getUsername());
-        String jwt = JwtUtils.generateToken(claims);
+        String jwt = jwtUtil.generateToken(claims, TokenType.ADMIN);
 
         //封装前端返回值
         EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()

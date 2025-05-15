@@ -3,13 +3,15 @@ package com.senda.interceptor;
 import com.alibaba.fastjson.JSONObject;
 import com.senda.constant.MessageConstant;
 import com.senda.context.JwtUserContext;
+import com.senda.enumeration.TokenType;
 import com.senda.result.Result;
-import com.senda.utils.JwtUtils;
+import com.senda.utils.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,6 +22,9 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class JwtTokenAdminInterceptor implements HandlerInterceptor {
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     private void sendError(HttpServletResponse response, String message) throws IOException {
         Result<String> error = Result.error(message);
@@ -48,7 +53,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
 
         //解析令牌
         try {
-            JwtUtils.parseToken(jwt);
+            jwtUtil.parseToken(jwt, TokenType.ADMIN);
         } catch (ExpiredJwtException e) {
             log.info("令牌已过期，返回未登录信息");
             sendError(response, MessageConstant.TOKEN_TIMEOUT);
