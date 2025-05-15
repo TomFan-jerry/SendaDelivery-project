@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
+import com.senda.annotation.AutoFill;
+import com.senda.constant.MessageConstant;
 import com.senda.constant.StatusConstant;
 import com.senda.context.AutoFillEntityContext;
 import com.senda.dto.DishDTO;
@@ -11,6 +13,10 @@ import com.senda.dto.DishPageQueryDTO;
 import com.senda.entity.Category;
 import com.senda.entity.Dish;
 import com.senda.entity.DishFlavor;
+import com.senda.entity.SetmealDish;
+import com.senda.enumeration.EntityType;
+import com.senda.enumeration.OperationType;
+import com.senda.exceptions.DeletionNotAllowedException;
 import com.senda.mapper.DishMapper;
 import com.senda.result.PageResult;
 import com.senda.service.IDishService;
@@ -50,6 +56,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements ID
      * @param dishDTO
      */
     @Override
+    @AutoFill(operationType = OperationType.INSERT, entityType = EntityType.DISH)
     @Transactional(rollbackFor = Exception.class)
     public void add(DishDTO dishDTO) {
         //将数据拷贝到AOP中填充后的Dish实体对象
@@ -77,8 +84,25 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements ID
      * @param ids
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteByIds(List<Long> ids) {
+        //若当前菜品为起售状态则抛出相应异常
+        LambdaQueryWrapper<Dish> wrapper = new LambdaQueryWrapper<Dish>()
+                .in(Dish::getId, ids)
+                .eq(Dish::getStatus, StatusConstant.ENABLE);
+
+        if (!list(wrapper).isEmpty()) {
+            throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+        }
+
+        //若当前菜品关联了套餐则抛出相应异常
+        if (!Db.lambdaQuery(SetmealDish.class)
+                .in(SetmealDish::getDishId, ids)
+                .list()
+                .isEmpty()) {
+            throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
+        }
+
         //删除菜品信息
         removeByIds(ids);
 

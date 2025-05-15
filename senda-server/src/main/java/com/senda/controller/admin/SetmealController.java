@@ -14,6 +14,7 @@ import com.senda.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public class SetmealController {
     @DeleteMapping
     public Result<String> deleteByIds(@RequestParam List<Long> ids) {
         log.info("批量删除套餐:{}", ids);
-        setmealService.removeByIds(ids);
+        setmealService.deleteByIds(ids);
         return Result.success(ids.toString());
     }
 
@@ -81,6 +82,7 @@ public class SetmealController {
      */
     @PutMapping
     @AutoFill(operationType = OperationType.UPDATE, entityType = EntityType.SETMEAL)
+    @Transactional(rollbackFor = Exception.class)
     public Result<String> update(@RequestBody SetmealDTO setmealDTO) {
         log.info("修改套餐:{}", setmealDTO);
 
@@ -103,15 +105,8 @@ public class SetmealController {
     @AutoFill(operationType = OperationType.UPDATE, entityType = EntityType.SETMEAL)
     public Result<String> setStatus(SetmealDTO setmealDTO) {
         log.info("套餐起售、停售:{}", setmealDTO);
-
-        //将数据拷贝到AOP中填充后的Setmeal实体对象
-        Setmeal setmeal = (Setmeal) AutoFillEntityContext.getCurrentEntity();
-        BeanUtils.copyProperties(setmealDTO, setmeal);
-
-        //更新数据
-        setmealService.updateById(setmeal);
-
-        return Result.success(setmeal.getStatus().toString());
+        setmealService.setStatus(setmealDTO);
+        return Result.success(setmealDTO.getStatus().toString());
     }
 
 }

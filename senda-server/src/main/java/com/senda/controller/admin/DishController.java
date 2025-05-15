@@ -14,6 +14,7 @@ import com.senda.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,7 +45,6 @@ public class DishController {
      * @return
      */
     @PostMapping
-    @AutoFill(operationType = OperationType.INSERT, entityType = EntityType.DISH)
     public Result<String> add(@RequestBody DishDTO dishDTO) {
         log.info("新增菜品:{}", dishDTO);
         dishService.add(dishDTO);
@@ -82,6 +82,7 @@ public class DishController {
      */
     @PutMapping
     @AutoFill(operationType = OperationType.UPDATE, entityType = EntityType.DISH)
+    @Transactional(rollbackFor = Exception.class)
     public Result<String> update(@RequestBody DishDTO dishDTO) {
         log.info("修改菜品:{}", dishDTO);
 

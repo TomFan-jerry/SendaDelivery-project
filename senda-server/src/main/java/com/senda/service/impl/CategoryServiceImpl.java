@@ -3,14 +3,19 @@ package com.senda.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.senda.annotation.AutoFill;
+import com.senda.constant.MessageConstant;
 import com.senda.constant.StatusConstant;
 import com.senda.context.AutoFillEntityContext;
 import com.senda.dto.CategoryDTO;
 import com.senda.dto.CategoryPageQueryDTO;
 import com.senda.entity.Category;
+import com.senda.entity.Dish;
+import com.senda.entity.Setmeal;
 import com.senda.enumeration.EntityType;
 import com.senda.enumeration.OperationType;
+import com.senda.exceptions.DeletionNotAllowedException;
 import com.senda.mapper.CategoryMapper;
 import com.senda.result.PageResult;
 import com.senda.service.ICategoryService;
@@ -73,6 +78,32 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
         //插入数据
         this.save(category);
+    }
+
+    /**
+     * 根据id删除分类
+     * @param id
+     */
+    @Override
+    public void deleteById(Long id) {
+        //若当前分类关联了菜品则抛出相应异常
+        if (!Db.lambdaQuery(Dish.class)
+                .eq(Dish::getCategoryId, id)
+                .list()
+                .isEmpty()) {
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
+        }
+
+        //若当前分类关联了套餐则抛出相应异常
+        if (!Db.lambdaQuery(Setmeal.class)
+                .eq(Setmeal::getCategoryId, id)
+                .list()
+                .isEmpty()) {
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
+        }
+
+        //删除分类信息
+        removeById(id);
     }
 
     /**
